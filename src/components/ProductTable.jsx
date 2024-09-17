@@ -17,7 +17,7 @@ function ProductTable() {
           </Table.Row>
           <Table.Row>
             <Table.Column>Tennis</Table.Column>
-            <Table.Column>$49.99</Table.Column>
+            <Table.Column>$99.99</Table.Column>
           </Table.Row>
         </Table.TBody>
       </Table.TableContainer>
