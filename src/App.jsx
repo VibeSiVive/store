@@ -1,42 +1,56 @@
-import { useState } from 'react';
-import './App.css';
-import FilterProductTable from './components/FilterProductTable';
-import ProductTable from "./components/ProductTable";
-import SearchBar from './components/SearchBar';
-
-const products = [
-  // Sporting Goods
-  { id: 1, name: "Tennis", price: 99.9, type: 1, stock: 100 },
-  { id: 2, name: "Badminton", price: 59.9, type: 1, stock: 16 },
-  { id: 3, name: "Football", price: -100, type: 1, stock: 0 }, 
-
-  // Electronics
-  { id: 4, name: "Smartphone", price: 99.9, type: 2, stock: 1 },
-  { id: 5, name: "Laptop", price: 59.9, type: 2, stock: 10 },
-  { id: 6, name: "Headphones", price: 100, type: 2, stock: 14 }
-];
-
-const headers = ["Sporting Goods", "Electronics"];
+import "./App.css";
+import { useState, useEffect } from "react";
+import FilterProductTable from "./components/FilterProductTable";
+import SearchBar from "./components/SearchBar";
 
 function App() {
-  const [query, setQuery]= useState("");
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true); // Set to true initially
+  const [query, setQuery] = useState("");
   const [stockChecked, setStockChecked] = useState(false);
 
-  const FilterProducts= products.filter(
-  (products) => 
-    //case: 1 If query is in name
-  products.name.toLowerCase().includes(query.toLowerCase()) &&
-  //case: 2 If it has stocks
-  // !stockChecks: if the value is false it can be considered
-  //products.stock > 0 we would render stocks that are not zero
-  stockChecked &&
-  products.stock > 0
-);
+  const filteredProducts = products.filter(
+    (product) =>
+      product.title.toLowerCase().includes(query.toLowerCase()) && // Use title instead of name
+      (!stockChecked || product.stock > 0)
+  );
+
+  useEffect(() => {
+    const getProducts = async () => {
+      try {
+        const response = await fetch("https://fakestoreapi.com/products/");
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false); // Set loading to false after the fetch is done
+      }
+    };
+    getProducts();
+  }, []);
+
   return (
     <FilterProductTable>
-      <SearchBar  query={ query } setQuery={setQuery}/>
-
-      <ProductTable headers={headers} products={FilterProducts} />
+      <SearchBar
+        query={query}
+        setQuery={setQuery}
+        stockChecked={stockChecked}
+        setStockChecked={setStockChecked}
+      />
+      {!loading ? (
+        <div className="flex flex-col gap-4">
+          {filteredProducts.map(
+            (
+              product // Use filteredProducts here
+            ) => (
+              <span key={product.id}>{product.title}</span>
+            )
+          )}
+        </div>
+      ) : (
+        <span>Loading...</span>
+      )}
     </FilterProductTable>
   );
 }
