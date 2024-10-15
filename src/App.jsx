@@ -2,6 +2,7 @@ import "./App.css";
 import { useState, useEffect } from "react";
 import FilterProductTable from "./components/FilterProductTable";
 import SearchBar from "./components/SearchBar";
+import ProductCard from "./components/Products/ProductCard";
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -32,21 +33,23 @@ function App() {
 
   return (
     <FilterProductTable>
+      <div className="flex justify-center items-center my-4">
       <SearchBar
         query={query}
         setQuery={setQuery}
         stockChecked={stockChecked}
         setStockChecked={setStockChecked}
       />
+      </div>
       {!loading ? (
-        <div className="flex flex-col gap-4">
-          {filteredProducts.map(
-            (
-              product // Use filteredProducts here
-            ) => (
-              <span key={product.id}>{product.title}</span>
-            )
-          )}
+        <div className="flex flex-wrap gap-5">
+          {products.map((product) => (
+          <ProductCard
+          key={`product-${product.id}`}
+        imageSrc={product.image}
+      name={product.title}
+      ></ProductCard>
+          ))}
         </div>
       ) : (
         <span>Loading...</span>
