@@ -1,10 +1,8 @@
-import React from "react";
-
 const TableContainer = ({ children, props }) => {
   return <table {...props}>{children}</table>;
 };
 
-const Thead = ({ children, props }) => {
+const THead = ({ children, props }) => {
   return <thead {...props}>{children}</thead>;
 };
 
@@ -30,11 +28,32 @@ const ColumnHeader = ({ children, props }) => {
 
 const Table = {
   TableContainer,
-  Thead,
+  THead,
   TBody,
   TFoot,
   Row,
   Column,
   ColumnHeader,
 };
+
 export default Table;
+
+/* 
+    <table>
+        <thead>
+            <tr>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+*/
